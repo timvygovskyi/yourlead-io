@@ -50,9 +50,9 @@ export default function Home() {
       <nav className="border-b border-[rgba(255,255,255,0.08)] sticky top-0 bg-[#0E0E18]/95 backdrop-blur-sm z-50">
         <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
           <div className="text-2xl font-bold text-white">yourlead.io</div>
-          <button className="px-5 py-2 bg-[#5C4BD4] text-white rounded-lg hover:bg-[#6b5ce6] transition-colors font-medium text-sm">
+          <a href="#signup-form" className="px-5 py-2 bg-[#5C4BD4] text-white rounded-lg hover:bg-[#6b5ce6] transition-colors font-medium text-sm">
             Get Started
-          </button>
+          </a>
         </div>
       </nav>
 
@@ -63,9 +63,9 @@ export default function Home() {
         <p className="text-lg md:text-xl text-[#8B8FA8] max-w-2xl mx-auto leading-relaxed mb-8">
           We scan thousands of online signals daily and send you a ready-to-send message before your competitor even sees it.
         </p>
-        <button className="px-8 py-3 bg-[#5C4BD4] text-white rounded-lg hover:bg-[#6b5ce6] transition-colors font-semibold text-base">
+        <a href="#signup-form" className="inline-block px-8 py-3 bg-[#5C4BD4] text-white rounded-lg hover:bg-[#6b5ce6] transition-colors font-semibold text-base">
           Start my free 7-day trial →
-        </button>
+        </a>
       </section>
 
       <section className="max-w-6xl mx-auto px-6 py-10">
@@ -95,7 +95,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="max-w-2xl mx-auto px-6 py-14">
+      <section id="signup-form" className="max-w-2xl mx-auto px-6 py-14">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-10">Start your free 7-day trial</h2>
         <form
           onSubmit={handleSubmit}
