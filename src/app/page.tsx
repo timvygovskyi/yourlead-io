@@ -12,9 +12,10 @@ export default function Home() {
   const [location, setLocation] = useState('Greater Toronto Area');
   const [businessInfo, setBusinessInfo] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [formError, setFormError] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (email !== confirmEmail) {
@@ -23,19 +24,40 @@ export default function Home() {
     }
 
     setEmailError('');
+    setFormError('');
     setSubmitted(true);
 
-    setTimeout(() => {
-      setEmail('');
-      setConfirmEmail('');
-      setFirstName('');
-      setLastName('');
-      setBusinessName('');
-      setService('Cleaning');
-      setLocation('Greater Toronto Area');
-      setBusinessInfo('');
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          firstName,
+          lastName,
+          businessName,
+          service,
+          location,
+          businessDescription: businessInfo,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.url) {
+        setFormError(data.error || 'Unable to create checkout session.');
+        setSubmitted(false);
+        return;
+      }
+
+      window.location.href = data.url;
+    } catch (error) {
+      console.error('Checkout submit failed:', error);
+      setFormError('Unable to start checkout. Please try again.');
       setSubmitted(false);
-    }, 2000);
+    }
   };
 
   const handleConfirmEmailChange = (value: string) => {
@@ -212,6 +234,10 @@ export default function Home() {
               7-day free trial — then $29.99/month. Cancel anytime.
             </p>
           </div>
+
+          {formError ? (
+            <p className="text-sm text-red-400">{formError}</p>
+          ) : null}
 
           <button
             type="submit"
