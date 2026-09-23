@@ -50,8 +50,8 @@ export async function POST(request: NextRequest) {
         location,
         businessDescription,
       },
-      success_url: 'https://www.yourlead.io/success',
-      cancel_url: 'https://www.yourlead.io',
+      success_url: 'https://www.yourlead.io/leadgentool/success',
+      cancel_url: 'https://www.yourlead.io/leadgentool',
     });
 
     return NextResponse.json({ url: session.url });

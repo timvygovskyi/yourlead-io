@@ -7,7 +7,7 @@ export default function SuccessPage() {
           Check your email for next steps and the information you need to get started.
         </p>
         <a
-          href="/"
+          href="/leadgentool"
           className="inline-flex items-center justify-center rounded-full bg-[#5C4BD4] px-6 py-3 text-white font-semibold hover:bg-[#6b5ce6] transition-colors"
         >
           Back to yourlead.io
