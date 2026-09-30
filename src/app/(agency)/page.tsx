@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import QuoteForm from './_components/QuoteForm';
+import ServiceQuoteLink from './_components/ServiceQuoteLink';
 
 const NAV = [
   { href: '#services', label: 'Services' },
@@ -37,6 +38,8 @@ const iconProps = {
 const SERVICES = [
   {
     name: 'Content Production',
+    slug: 'content-production' as const,
+    cta: 'Get a Content Production quote →',
     body: 'Professional, channel-specific video and photo, shot for how people actually watch on Instagram, YouTube, and TikTok.',
     icon: (
       <svg {...iconProps}>
@@ -47,6 +50,8 @@ const SERVICES = [
   },
   {
     name: 'Organic Social',
+    slug: 'organic-social' as const,
+    cta: 'Get an Organic Social quote →',
     body: 'Consistent posting and channel management so your business looks active and credible every week, not just after a shoot.',
     icon: (
       <svg {...iconProps}>
@@ -57,6 +62,8 @@ const SERVICES = [
   },
   {
     name: 'Paid Advertising',
+    slug: 'paid-ads' as const,
+    cta: 'Get a Paid Advertising quote →',
     body: 'Meta, Google, LinkedIn, and Reddit campaigns built on the research, not guesses — targeting the people most likely to convert.',
     icon: (
       <svg {...iconProps}>
@@ -68,6 +75,8 @@ const SERVICES = [
   },
   {
     name: 'Email Marketing',
+    slug: 'email-marketing' as const,
+    cta: 'Get an Email Marketing quote →',
     body: 'Turning first-time visitors and past customers into repeat revenue, not one-time transactions.',
     icon: (
       <svg {...iconProps}>
@@ -78,6 +87,8 @@ const SERVICES = [
   },
   {
     name: 'Automation',
+    slug: 'automation' as const,
+    cta: 'Get an Automation quote →',
     body: 'Custom workflows (n8n, Make) that handle lead routing, follow-up, and reporting so nothing falls through the cracks.',
     icon: (
       <svg {...iconProps}>
@@ -210,9 +221,12 @@ export default function AgencyHome() {
                   </span>
                   <h3 className="mt-4 text-xl font-semibold">{s.name}</h3>
                   <p className="mt-3 flex-1 text-slate-600">{s.body}</p>
-                  <a href="#quote" className="mt-6 font-semibold text-slate-900 underline-offset-4 hover:underline">
-                    Get a quote →
-                  </a>
+                  <ServiceQuoteLink
+                    slug={s.slug}
+                    className="mt-6 font-semibold text-slate-900 underline-offset-4 hover:underline"
+                  >
+                    {s.cta}
+                  </ServiceQuoteLink>
                 </div>
               ))}
               <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-slate-200 sm:col-span-2 sm:aspect-[2/1] lg:col-span-1 lg:aspect-auto lg:min-h-64">
