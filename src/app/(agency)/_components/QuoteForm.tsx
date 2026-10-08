@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { PRESELECT_EVENT, QUOTE_SERVICES, type QuoteServiceSlug } from '@/data/quoteServices';
+import { trackLead } from '@/lib/tracking';
 
 type Fields = {
   name: string;
@@ -83,6 +85,8 @@ export default function QuoteForm() {
     sending.current = true;
     setStatus('sending');
 
+    const serviceLabels = QUOTE_SERVICES.filter((s) => services.includes(s.slug)).map((s) => s.label);
+
     try {
       const response = await fetch('/api/quote', {
         method: 'POST',
@@ -91,7 +95,7 @@ export default function QuoteForm() {
         },
         body: JSON.stringify({
           ...fields,
-          services: QUOTE_SERVICES.filter((s) => services.includes(s.slug)).map((s) => s.label),
+          services: serviceLabels,
           page: window.location.pathname,
           website: honeypot,
         }),
@@ -102,7 +106,8 @@ export default function QuoteForm() {
         throw new Error(`Quote request failed with status ${response.status}`);
       }
 
-      // TRACKING: Meta Lead event goes here (fires only on success).
+      // TRACKING: GA4 generate_lead + Meta Lead (success only; no-op without consent). No personal data.
+      trackLead(serviceLabels);
 
       setStatus('success');
     } catch (error) {
@@ -226,6 +231,13 @@ export default function QuoteForm() {
       >
         {status === 'sending' ? 'Sending...' : 'Get My Quote'}
       </button>
+      <p className="text-center text-sm text-slate-500">
+        By submitting, you agree we can contact you about your request. See our{' '}
+        <Link href="/privacy" className="underline underline-offset-2 hover:text-slate-900">
+          Privacy Policy
+        </Link>
+        .
+      </p>
     </form>
   );
 }
