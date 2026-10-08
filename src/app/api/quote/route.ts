@@ -3,6 +3,7 @@ import { QUOTE_SERVICE_LABELS } from '@/data/quoteServices';
 
 const MAX_FIELD = 200;
 const MAX_COMMENT = 2000;
+const MIN_FILL_MS = 3000;
 
 type QuoteBody = {
   name?: unknown;
@@ -12,7 +13,8 @@ type QuoteBody = {
   services?: unknown;
   comment?: unknown;
   page?: unknown;
-  website?: unknown;
+  lym_hp_field?: unknown;
+  elapsed_ms?: unknown;
 };
 
 const str = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
@@ -25,8 +27,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: 'Invalid JSON.' }, { status: 400 });
   }
 
-  // Honeypot: bots fill the hidden "website" field. Pretend success, do nothing.
-  if (str(body.website)) {
+  // Honeypot: bots fill the hidden "lym_hp_field" field. Pretend success, do nothing.
+  if (str(body.lym_hp_field)) {
+    return NextResponse.json({ ok: true });
+  }
+
+  // Timing check: the form reports how long after page load it was submitted.
+  // Under 3 seconds is treated as a bot the same way.
+  if (typeof body.elapsed_ms === 'number' && body.elapsed_ms < MIN_FILL_MS) {
     return NextResponse.json({ ok: true });
   }
 
