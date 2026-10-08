@@ -256,6 +256,11 @@ export default function Home() {
             hello@yourlead.io
           </a>
         </div>
+        <div className="max-w-6xl mx-auto px-6 mt-3 flex justify-center md:justify-end gap-4 text-xs text-[#8B8FA8]">
+          <a href="/privacy" className="hover:text-white transition-colors">Privacy</a>
+          <a href="/terms" className="hover:text-white transition-colors">Terms</a>
+          <a href="/refund" className="hover:text-white transition-colors">Refund</a>
+        </div>
       </footer>
     </div>
   );
