@@ -19,6 +19,9 @@ type Status = 'idle' | 'sending' | 'success' | 'error';
 
 const EMPTY: Fields = { name: '', company: '', phone: '', email: '', comment: '' };
 
+// Real people take longer than this to fill the form; faster submits are treated as bots.
+const MIN_FILL_MS = 3000;
+
 function validate(f: Fields): Partial<Record<RequiredField, string>> {
   const errors: Partial<Record<RequiredField, string>> = {};
   if (!f.name.trim()) errors.name = 'Please enter your name.';
@@ -82,6 +85,13 @@ export default function QuoteForm() {
     setErrors(found);
     if (Object.keys(found).length > 0) return;
 
+    // Submitted too soon after page load: treat as a bot the same way.
+    const elapsedMs = Math.round(performance.now());
+    if (elapsedMs < MIN_FILL_MS) {
+      setStatus('success');
+      return;
+    }
+
     sending.current = true;
     setStatus('sending');
 
@@ -97,7 +107,8 @@ export default function QuoteForm() {
           ...fields,
           services: serviceLabels,
           page: window.location.pathname,
-          website: honeypot,
+          lym_hp_field: honeypot,
+          elapsed_ms: elapsedMs,
         }),
       });
       const data = (await response.json().catch(() => null)) as { ok?: boolean } | null;
@@ -204,15 +215,20 @@ export default function QuoteForm() {
         />
       </div>
 
-      {/* Honeypot: hidden from people, visible to bots */}
+      {/* Honeypot: hidden from people, visible to bots. Name and label are deliberately
+          meaningless so browser autofill and password managers leave it empty. */}
       <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-        <label htmlFor="quote-website">Website</label>
+        <label htmlFor="lym_hp_field">Leave this field empty</label>
         <input
-          id="quote-website"
-          name="website"
+          id="lym_hp_field"
+          name="lym_hp_field"
           type="text"
           tabIndex={-1}
           autoComplete="off"
+          data-1p-ignore
+          data-lpignore="true"
+          data-bwignore
+          data-form-type="other"
           value={honeypot}
           onChange={(e) => setHoneypot(e.target.value)}
         />
