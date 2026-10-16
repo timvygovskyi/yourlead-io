@@ -95,13 +95,17 @@ export default function AgencyHome() {
             </div>
             <figure className="easel">
               <div className="print dev">
+                {/* LCP element: 1600px WebP source (63KB), preloaded in <head>, high fetch priority. */}
                 <Image
                   className="print__plate"
-                  src="/images/services.jpg"
+                  src="/images/hero.webp"
                   alt="Camera and field monitor on a client shoot"
                   fill
-                  priority
-                  sizes="(min-width: 900px) 56vw, 100vw"
+                  preload
+                  fetchPriority="high"
+                  loading="eager"
+                  quality={70}
+                  sizes="(min-width: 900px) 50vw, calc(100vw - 2.5rem)"
                 />
                 <div className="dev__paper" aria-hidden="true" />
               </div>
