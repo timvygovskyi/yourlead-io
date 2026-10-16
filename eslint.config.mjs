@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local design tooling and prototype builds (not part of the site).
+    "redesign-prototype/**",
+    ".claude/**",
+    // Vendored scrollcraft engine (kept byte-identical to the skill copy).
+    "src/lib/scrollcraft/**",
   ]),
 ]);
 

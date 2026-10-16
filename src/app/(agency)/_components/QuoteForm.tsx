@@ -34,9 +34,6 @@ function validate(f: Fields): Partial<Record<RequiredField, string>> {
 const isServiceSlug = (value: string | null): value is QuoteServiceSlug =>
   QUOTE_SERVICES.some((s) => s.slug === value);
 
-const inputClass =
-  'w-full rounded-md border border-slate-300 bg-white px-3 py-3 text-base text-slate-900 placeholder-slate-400 focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900';
-
 export default function QuoteForm() {
   const [fields, setFields] = useState<Fields>(EMPTY);
   const [services, setServices] = useState<QuoteServiceSlug[]>([]);
@@ -131,8 +128,8 @@ export default function QuoteForm() {
 
   if (status === 'success') {
     return (
-      <div className="rounded-lg border border-slate-200 bg-white p-8 text-center" role="status">
-        <p className="text-xl font-semibold text-slate-900">Thanks, we&apos;ll be in touch.</p>
+      <div className="notice" role="status">
+        <p>Thanks, we&apos;ll be in touch.</p>
       </div>
     );
   }
@@ -146,13 +143,13 @@ export default function QuoteForm() {
   });
 
   const field = (key: RequiredField, label: string, input: React.ReactNode) => (
-    <div>
-      <label htmlFor={`quote-${key}`} className="mb-1.5 block text-sm font-medium text-slate-700">
-        {label} <span className="text-red-600">*</span>
+    <div className="field">
+      <label htmlFor={`quote-${key}`}>
+        {label} <span className="req">*</span>
       </label>
       {input}
       {errors[key] ? (
-        <p id={`quote-${key}-error`} className="mt-1.5 text-sm text-red-600">
+        <p id={`quote-${key}-error`} className="err">
           {errors[key]}
         </p>
       ) : null}
@@ -160,25 +157,25 @@ export default function QuoteForm() {
   );
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-5 rounded-lg border border-slate-200 bg-white p-6 sm:p-8">
-      <div className="grid gap-5 sm:grid-cols-2">
+    <form onSubmit={handleSubmit} noValidate className="slip">
+      <div className="grid2">
         {field('name', 'Your name', (
-          <input type="text" autoComplete="name" value={fields.name} onChange={update('name')} className={inputClass} {...aria('name')} />
+          <input type="text" autoComplete="name" value={fields.name} onChange={update('name')} {...aria('name')} />
         ))}
         {field('company', 'Company name', (
-          <input type="text" autoComplete="organization" value={fields.company} onChange={update('company')} className={inputClass} {...aria('company')} />
+          <input type="text" autoComplete="organization" value={fields.company} onChange={update('company')} {...aria('company')} />
         ))}
         {field('phone', 'Phone', (
-          <input type="tel" autoComplete="tel" inputMode="tel" value={fields.phone} onChange={update('phone')} className={inputClass} {...aria('phone')} />
+          <input type="tel" autoComplete="tel" inputMode="tel" value={fields.phone} onChange={update('phone')} {...aria('phone')} />
         ))}
         {field('email', 'Email', (
-          <input type="email" autoComplete="email" value={fields.email} onChange={update('email')} className={inputClass} {...aria('email')} />
+          <input type="email" autoComplete="email" value={fields.email} onChange={update('email')} {...aria('email')} />
         ))}
       </div>
 
-      <fieldset>
-        <legend className="mb-2 block text-sm font-medium text-slate-700">What do you need help with?</legend>
-        <div className="flex flex-wrap gap-2">
+      <fieldset className="fieldset">
+        <legend>What do you need help with?</legend>
+        <div className="chips">
           {QUOTE_SERVICES.map((s) => {
             const selected = services.includes(s.slug);
             return (
@@ -187,11 +184,7 @@ export default function QuoteForm() {
                 type="button"
                 aria-pressed={selected}
                 onClick={() => toggleService(s.slug)}
-                className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-1 ${
-                  selected
-                    ? 'border-slate-900 bg-slate-900 text-white'
-                    : 'border-slate-300 bg-white text-slate-700 hover:border-slate-900'
-                }`}
+                className="chip"
               >
                 {s.label}
               </button>
@@ -200,8 +193,8 @@ export default function QuoteForm() {
         </div>
       </fieldset>
 
-      <div>
-        <label htmlFor="quote-comment" className="mb-1.5 block text-sm font-medium text-slate-700">
+      <div className="field" style={{ marginTop: '1.4rem' }}>
+        <label htmlFor="quote-comment">
           Leave a comment
         </label>
         <textarea
@@ -211,13 +204,12 @@ export default function QuoteForm() {
           maxLength={2000}
           value={fields.comment}
           onChange={update('comment')}
-          className={`${inputClass} resize-y`}
         />
       </div>
 
       {/* Honeypot: hidden from people, visible to bots. Name and label are deliberately
           meaningless so browser autofill and password managers leave it empty. */}
-      <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+      <div aria-hidden="true" className="hp">
         <label htmlFor="lym_hp_field">Leave this field empty</label>
         <input
           id="lym_hp_field"
@@ -235,7 +227,7 @@ export default function QuoteForm() {
       </div>
 
       {status === 'error' ? (
-        <p className="text-sm text-red-600" role="alert">
+        <p className="form-error" role="alert">
           Something went wrong — email us at hello@yourlead.io or call +1 647 704 1489.
         </p>
       ) : null}
@@ -243,13 +235,13 @@ export default function QuoteForm() {
       <button
         type="submit"
         disabled={status === 'sending'}
-        className="w-full rounded-md bg-amber-500 px-6 py-3.5 text-base font-semibold text-slate-900 transition-colors hover:bg-amber-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-70"
+        className="btn btn--primary"
       >
         {status === 'sending' ? 'Sending...' : 'Get My Quote'}
       </button>
-      <p className="text-center text-sm text-slate-500">
+      <p className="consent">
         By submitting, you agree we can contact you about your request. See our{' '}
-        <Link href="/privacy" className="underline underline-offset-2 hover:text-slate-900">
+        <Link href="/privacy">
           Privacy Policy
         </Link>
         .
